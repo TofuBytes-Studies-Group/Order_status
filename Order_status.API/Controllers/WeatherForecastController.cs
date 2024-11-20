@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using MTOGO.API.Services;
+using Order_status.API.Services;
 
-namespace MTOGO.API.Controllers
+namespace Order_status.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]

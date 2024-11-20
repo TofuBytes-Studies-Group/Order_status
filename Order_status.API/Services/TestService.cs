@@ -1,7 +1,7 @@
 ﻿
-using MTOGO.Infrastructure.Kafka;
+using Order_status.Infrastructure.Kafka;
 
-namespace MTOGO.API.Services
+namespace Order_status.API.Services
 {
     public class TestService  
     {

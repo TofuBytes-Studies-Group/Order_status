@@ -1,6 +1,6 @@
-using MTOGO.API.Kafka;
-using MTOGO.API.Services;
-using MTOGO.Infrastructure.Kafka;
+using Order_status.API.Kafka;
+using Order_status.API.Services;
+using Order_status.Infrastructure.Kafka;
 
 var builder = WebApplication.CreateBuilder(args);
 

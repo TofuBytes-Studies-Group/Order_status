@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace MTOGO.Infrastructure.Kafka
+namespace Order_status.Infrastructure.Kafka
 {
     public class KafkaProducer : IDisposable
     {
