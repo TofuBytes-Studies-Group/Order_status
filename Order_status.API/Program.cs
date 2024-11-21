@@ -11,11 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSingleton<OrderStatusService>();
 // Add the producer service as singletons:
 builder.Services.AddSingleton<KafkaProducer>();
 // Add the kafka consumer service as a hosted service (background service that runs for the lifetime of the application):
 builder.Services.AddHostedService<KafkaConsumer>();
-builder.Services.AddSingleton<TestService>();
 
 var app = builder.Build();
 

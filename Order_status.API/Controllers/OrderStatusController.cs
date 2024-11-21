@@ -5,26 +5,26 @@ namespace Order_status.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class OrderStatusController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
-        private readonly TestService _testService;
+        private readonly ILogger<OrderStatusController> _logger;
+        private readonly OrderStatusService _orderStatusService;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, TestService testService)
+        public OrderStatusController(ILogger<OrderStatusController> logger, OrderStatusService orderStatusService)
         {
             _logger = logger;
-            _testService = testService;
+            _orderStatusService = orderStatusService;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
-            _testService.DoStuff();
+            _orderStatusService.DoStuff();
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
@@ -34,5 +34,6 @@ namespace Order_status.API.Controllers
             })
             .ToArray();
         }
+
     }
 }

@@ -1,39 +1,38 @@
 ﻿using Confluent.Kafka;
+using Newtonsoft.Json;
+using Order_status.API.Kafka.DTOs;
+using Order_status.API.Services;
 
 namespace Order_status.API.Kafka
 {
-    // Extend BackgroundService to run in the background for the lifetime of the application
     public class KafkaConsumer : BackgroundService
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<KafkaConsumer> _logger;
+        private readonly OrderStatusService _orderStatusService;
 
-        // The Confluent.Kafka IConsumer interface with Key-Value, like IProducer
         private readonly IConsumer<string, string> _consumer;
 
-        public KafkaConsumer(IConfiguration configuration, ILogger<KafkaConsumer> logger)
+        public KafkaConsumer(IConfiguration configuration, ILogger<KafkaConsumer> logger, OrderStatusService orderStatusService)
         {
             _configuration = configuration;
             _logger = logger;
+            _orderStatusService = orderStatusService;
 
             var config = new ConsumerConfig
             {
                 BootstrapServers = configuration["Kafka:BootstrapServers"],
-
-                //These configs should probably also be setup in application.json:
-                // The consumer group ID; consumers with the same group ID share load and process messages as a group. 
+                //TODO
                 GroupId = "groupId",
-                // Configures the consumer to read from the beginning of the topic if there’s no offset.
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
-            // We build the consumer instance with the specified configs.
             _consumer = new ConsumerBuilder<string, string>(config).Build();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            // Subscribe the consumer to the specified topic so it can receive messages from it. Should also be configured somewhere
+            // TODO: It will consume from the Order microservice and then use the order to create the order status
             _consumer.Subscribe("topic");
 
             try
@@ -47,13 +46,16 @@ namespace Order_status.API.Kafka
 
                         if (consumeResult != null)
                         {
-                            // Process the message if one was received
                             var message = consumeResult.Message.Value;
-                            var key = consumeResult.Message.Key;
+                            _logger.LogInformation($"Received Message: {message}, Key: {consumeResult.Message.Key}");
 
-                            // Here we just log it, but should call other services to process the message instead
-                            _logger.LogInformation($"Received Message: {message}, Key: {key}");
+                            var orderDto = JsonConvert.DeserializeObject<OrderDTO>(message);
+                            if (orderDto != null)
+                            {
+                                _orderStatusService.SetOrderStatusAsAccepted(orderDto);
+                            }
                         }
+
                     }
                     catch (ConsumeException ex)
                     {
