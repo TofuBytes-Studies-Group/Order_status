@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Order_status.API.Services;
+using Order_status.Domain.Aggregates;
 
 namespace Order_status.API.Controllers
 {
@@ -33,6 +35,18 @@ namespace Order_status.API.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<string>> GetCartAsync(Guid orderId)
+        {
+            _logger.LogInformation("Fetching order status for order with orderId: {OrderId}", orderId);
+
+            OrderStatus orderStatus = await _orderStatusService.GetOrderStatusAsync(orderId);
+            _logger.LogInformation("Order status: {OrderStatus} fetched successfully for order with id: {OrderId}", 
+                JsonConvert.SerializeObject(orderStatus), orderId);
+
+            return Ok(orderStatus.ToString());
         }
 
     }

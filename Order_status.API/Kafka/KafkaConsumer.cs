@@ -52,7 +52,7 @@ namespace Order_status.API.Kafka
                             var orderDto = JsonConvert.DeserializeObject<OrderDTO>(message);
                             if (orderDto != null)
                             {
-                                _orderStatusService.SetOrderStatusAsAccepted(orderDto);
+                                await _orderStatusService.SetOrderStatusAsAcceptedAsync(orderDto);
                             }
                         }
 
