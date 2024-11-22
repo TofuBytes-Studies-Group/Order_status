@@ -2,21 +2,26 @@
 using Order_status.Domain.Aggregates;
 using Order_status.Domain.Entities;
 using Order_status.Infrastructure.Kafka;
+using Order_status.Infrastructure.Models;
+using Order_status.Infrastructure.Repositories;
 
 namespace Order_status.API.Services
 {
     public class OrderStatusService
     {
         private readonly KafkaProducer _kafkaProducer;
-        public OrderStatusService(KafkaProducer kafkaProducer)
+        private readonly IOrderStatusRepository _orderStatusRepository;
+        public OrderStatusService(KafkaProducer kafkaProducer, IOrderStatusRepository orderStatusRepository)
         {
             _kafkaProducer = kafkaProducer;
+            _orderStatusRepository = orderStatusRepository;
         }
 
         public async void DoStuff()
         {
             // Brug KafkaProducer
-            await _kafkaProducer.ProduceAsync("topic", "Virker", "From DOSTUFF");
+            await _orderStatusRepository.CreateOrderStatusAsync(new OrderStatusDTO() { OrderId = Guid.NewGuid(), CustomerName = "TestUser1", Status = Status.Accepted });
+            //await _kafkaProducer.ProduceAsync("topic", "Virker", "From DOSTUFF");
         }
 
         public OrderStatus? GetOrderStatus(Guid orderId, string username)
