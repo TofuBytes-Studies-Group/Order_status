@@ -9,11 +9,11 @@ namespace Order_status.API.Kafka
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<KafkaConsumer> _logger;
-        private readonly OrderStatusService _orderStatusService;
+        private readonly IOrderStatusService _orderStatusService;
 
         private readonly IConsumer<string, string> _consumer;
 
-        public KafkaConsumer(IConfiguration configuration, ILogger<KafkaConsumer> logger, OrderStatusService orderStatusService)
+        public KafkaConsumer(IConfiguration configuration, ILogger<KafkaConsumer> logger, IOrderStatusService orderStatusService)
         {
             _configuration = configuration;
             _logger = logger;

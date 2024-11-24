@@ -5,6 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Order_status.Infrastructure.Models;
 using Microsoft.Extensions.Logging;
+using Order_status.Domain.Exceptions;
 
 namespace Order_status.Infrastructure.Repositories
 {
@@ -49,7 +50,12 @@ namespace Order_status.Infrastructure.Repositories
 
         public async Task<OrderStatusDTO> GetOrderStatusAsync(Guid orderId)
         {
-            return await _collection.Find(o => o.OrderId == orderId).FirstOrDefaultAsync();
+            var result = await _collection.Find(o => o.OrderId == orderId).FirstOrDefaultAsync();
+            if (result == null)
+            {
+                throw new OrderStatusNotFoundException($"OrderStatus with OrderId {orderId} not found in database.");
+            }
+            return result;
         }
 
         public async Task UpdateOrderStatusAsync(OrderStatusDTO orderStatus)
