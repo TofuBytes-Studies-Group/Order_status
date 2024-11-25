@@ -6,6 +6,7 @@ using MongoDB.Driver;
 using Order_status.Infrastructure.Models;
 using Microsoft.Extensions.Logging;
 using Order_status.Domain.Exceptions;
+using Order_status.Domain.Entities;
 
 namespace Order_status.Infrastructure.Repositories
 {
@@ -14,12 +15,18 @@ namespace Order_status.Infrastructure.Repositories
         private readonly IMongoCollection<OrderStatusDTO> _collection;
         private readonly ILogger<MongoDBRepository> _logger;
 
+        private static bool _guidSerializerRegistered = false;
+
         public MongoDBRepository(IOptions<MongoDBConnection> mongoConnection, ILogger<MongoDBRepository> logger)
         {
             _logger = logger;
 
             // Needed to serialize the guid 
-            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+            if (!_guidSerializerRegistered)
+            {
+                BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+                _guidSerializerRegistered = true;
+            }
 
             var mongoClient = new MongoClient(
                 mongoConnection.Value.ConnectionString);
@@ -58,9 +65,17 @@ namespace Order_status.Infrastructure.Repositories
             return result;
         }
 
-        public async Task UpdateOrderStatusAsync(OrderStatusDTO orderStatus)
+        public async Task UpdateOrderStatusAsync(Guid orderId, Status newStatus)
         {
-            await _collection.ReplaceOneAsync(o => o.OrderId == orderStatus.OrderId, orderStatus);
+            var filter = Builders<OrderStatusDTO>.Filter.Eq(o => o.OrderId, orderId);
+            var update = Builders<OrderStatusDTO>.Update.Set(o => o.Status, newStatus);
+
+            var result = await _collection.UpdateOneAsync(filter, update);
+            if (result.ModifiedCount == 0)
+            {
+                throw new OrderStatusNotFoundException($"OrderStatus with OrderId {orderId} not found in database.");
+            }
+            _logger.LogInformation("Successfully updated order status for order with id: {OrderId}", orderId);
         }
     }
 }

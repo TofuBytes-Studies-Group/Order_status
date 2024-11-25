@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using Moq;
 using Order_status.API.Kafka.DTOs;
 using Order_status.API.Services;
@@ -7,7 +9,7 @@ using Order_status.Domain.Exceptions;
 using Order_status.Infrastructure.Models;
 using Order_status.Infrastructure.Repositories;
 
-namespace API.Tests
+namespace Order_status.Tests.API.Controllers
 {
     public class OrderStatusServiceTest
     {
@@ -137,7 +139,7 @@ namespace API.Tests
         {
             // Arrange
             var mockRepo = new Mock<IOrderStatusRepository>();
-            var service = new OrderStatusService(mockRepo.Object); 
+            var service = new OrderStatusService(mockRepo.Object);
 
             var orderDto = new OrderDTO
             {
@@ -150,6 +152,85 @@ namespace API.Tests
                 () => service.SetOrderStatusAsAcceptedAsync(orderDto)
             );
             Assert.Equal("The order must have a valid order id and customer name", exception.Message);
+        }
+
+        [Theory]
+        [InlineData(Status.Accepted)]
+        [InlineData(Status.BeingPrepared)]
+        [InlineData(Status.ReadyForPickUp)]
+        [InlineData(Status.PickedUp)]
+        [InlineData(Status.Delivered)]
+        public async Task UpdateOrderStatusAsync_OrderIdFoundInDatabase_ShoulUpdateCorrectOrderStatusWithCorrectStatus(Status status)
+        {
+            // Arrange
+            var mockRepo = new Mock<IOrderStatusRepository>();
+            var service = new OrderStatusService(mockRepo.Object);
+
+            var orderId = Guid.NewGuid();
+
+            mockRepo
+                .Setup(repo => repo.UpdateOrderStatusAsync(It.IsAny<Guid>(), It.IsAny<Status>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            await service.UpdateOrderStatusAsync(orderId, status);
+
+            // Assert
+            mockRepo.Verify(repo =>
+                repo.UpdateOrderStatusAsync(It.Is<Guid>(id => id == orderId), It.Is<Status>(s => s == status)),
+                Times.Once);
+        }
+
+        [Theory]
+        [InlineData(Status.Accepted)]
+        [InlineData(Status.BeingPrepared)]
+        [InlineData(Status.ReadyForPickUp)]
+        [InlineData(Status.PickedUp)]
+        [InlineData(Status.Delivered)]
+        public async Task UpdateOrderStatusAsync_OrderIdIsEmpty_ShouldThrowArgumentException(Status status)
+        {
+            // Arrange
+            var mockRepo = new Mock<IOrderStatusRepository>();
+            var service = new OrderStatusService(mockRepo.Object);
+
+            var orderId = Guid.Empty;
+
+            mockRepo
+                .Setup(repo => repo.UpdateOrderStatusAsync(It.IsAny<Guid>(), It.IsAny<Status>()))
+                .Returns(Task.CompletedTask);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(
+                () => service.UpdateOrderStatusAsync(orderId, status)
+            );
+            Assert.Equal("The order must have a valid order id", exception.Message);
+        }
+
+        [Theory]
+        [InlineData(Status.Accepted)]
+        [InlineData(Status.BeingPrepared)]
+        [InlineData(Status.ReadyForPickUp)]
+        [InlineData(Status.PickedUp)]
+        [InlineData(Status.Delivered)]
+        public async Task UpdateOrderStatusAsync_OrderIdNotFoundInDatabase_ShouldThrowNotFoundException(Status status)
+        {
+            // Arrange
+            var mockRepo = new Mock<IOrderStatusRepository>();
+            var service = new OrderStatusService(mockRepo.Object);
+
+            var orderId = Guid.NewGuid();
+
+            mockRepo
+                .Setup(repo => repo.UpdateOrderStatusAsync(It.IsAny<Guid>(), It.IsAny<Status>()))
+                .ThrowsAsync(new OrderStatusNotFoundException($"OrderStatus with OrderId {orderId} not found in database."));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<OrderStatusNotFoundException>(() => service.UpdateOrderStatusAsync(orderId, status));
+            Assert.Equal($"OrderStatus with OrderId {orderId} not found in database.", exception.Message);
+
+            mockRepo.Verify(repo =>
+                repo.UpdateOrderStatusAsync(It.Is<Guid>(id => id == orderId), It.Is<Status>(s => s == status)),
+                Times.Once);
         }
     }
 }
