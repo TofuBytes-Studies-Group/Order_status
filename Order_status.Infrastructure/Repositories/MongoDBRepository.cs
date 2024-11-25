@@ -7,7 +7,6 @@ using Order_status.Infrastructure.Models;
 using Microsoft.Extensions.Logging;
 using Order_status.Domain.Exceptions;
 using Order_status.Domain.Entities;
-using Order_status.Domain.Aggregates;
 
 namespace Order_status.Infrastructure.Repositories
 {
@@ -16,12 +15,18 @@ namespace Order_status.Infrastructure.Repositories
         private readonly IMongoCollection<OrderStatusDTO> _collection;
         private readonly ILogger<MongoDBRepository> _logger;
 
+        private static bool _guidSerializerRegistered = false;
+
         public MongoDBRepository(IOptions<MongoDBConnection> mongoConnection, ILogger<MongoDBRepository> logger)
         {
             _logger = logger;
 
             // Needed to serialize the guid 
-            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+            if (!_guidSerializerRegistered)
+            {
+                BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+                _guidSerializerRegistered = true;
+            }
 
             var mongoClient = new MongoClient(
                 mongoConnection.Value.ConnectionString);
