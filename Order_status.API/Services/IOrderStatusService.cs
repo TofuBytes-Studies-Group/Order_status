@@ -8,5 +8,6 @@ namespace Order_status.API.Services
     {
         Task<OrderStatus> GetOrderStatusAsync(Guid orderId);
         Task SetOrderStatusAsAcceptedAsync(OrderDTO orderDto);
+        Task UpdateOrderStatusAsync(Guid orderId, Status status); // To pretend like the delivery agent can change the order status
     }
 }

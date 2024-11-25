@@ -1,4 +1,5 @@
-﻿using Order_status.Infrastructure.Models;
+﻿using Order_status.Domain.Entities;
+using Order_status.Infrastructure.Models;
 
 namespace Order_status.Infrastructure.Repositories
 {
@@ -6,6 +7,6 @@ namespace Order_status.Infrastructure.Repositories
     {
         Task CreateOrderStatusAsync(OrderStatusDTO orderStatus);
         Task<OrderStatusDTO> GetOrderStatusAsync(Guid orderId);
-        Task UpdateOrderStatusAsync(OrderStatusDTO orderStatus);
+        Task UpdateOrderStatusAsync(Guid orderId, Status newStatus);
     }
 }

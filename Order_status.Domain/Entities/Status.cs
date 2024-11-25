@@ -4,6 +4,7 @@
     {
         Accepted,
         BeingPrepared,
+        ReadyForPickUp,
         PickedUp, 
         Delivered,
     }

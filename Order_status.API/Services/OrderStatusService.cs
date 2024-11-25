@@ -27,14 +27,17 @@ namespace Order_status.API.Services
             {
                 throw new ArgumentException("The order must have a valid order id and customer name");
             }
-            await SaveOrderStatusAsync(orderDto.Id, orderDto.CustomerName, Status.Accepted);
+            OrderStatus orderStatus = new OrderStatus() { OrderId = orderDto.Id, CustomerName = orderDto.CustomerName, Status = Status.Accepted };
+            await _orderStatusRepository.CreateOrderStatusAsync(orderStatus.ToDTO());
         }
 
-        private async Task SaveOrderStatusAsync(Guid orderId, string customerName, Status status)
+        public async Task UpdateOrderStatusAsync(Guid orderId, Status status)
         {
-            OrderStatus orderStatus = new OrderStatus() { OrderId = orderId, CustomerName = customerName, Status = status };
-            OrderStatusDTO orderStatusDTO = orderStatus.ToDTO();
-            await _orderStatusRepository.CreateOrderStatusAsync(orderStatusDTO);
+            if (orderId == Guid.Empty)
+            {
+                throw new ArgumentException("The order must have a valid order id");
+            }
+            await _orderStatusRepository.UpdateOrderStatusAsync(orderId, status);
         }
     }
 }
