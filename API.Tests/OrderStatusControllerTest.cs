@@ -97,6 +97,7 @@ namespace Order_status.Tests.API.Controllers
 
         [Theory]
         [InlineData(Status.Accepted)]
+        [InlineData(Status.Rejected)]
         [InlineData(Status.BeingPrepared)]
         [InlineData(Status.ReadyForPickUp)]
         [InlineData(Status.PickedUp)]
@@ -122,6 +123,7 @@ namespace Order_status.Tests.API.Controllers
 
         [Theory]
         [InlineData(Status.Accepted)]
+        [InlineData(Status.Rejected)]
         [InlineData(Status.BeingPrepared)]
         [InlineData(Status.ReadyForPickUp)]
         [InlineData(Status.PickedUp)]
