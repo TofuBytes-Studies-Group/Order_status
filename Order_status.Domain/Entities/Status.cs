@@ -3,6 +3,7 @@
     public enum Status
     {
         Accepted,
+        Rejected,
         BeingPrepared,
         ReadyForPickUp,
         PickedUp, 
