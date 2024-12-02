@@ -23,7 +23,7 @@ namespace Order_status.Tests.API.Controllers
             mockConfiguration.Setup(config => config["Kafka:BootstrapServers"]).Returns("localhost:9092");
 
             var orderId = Guid.NewGuid();
-            var sampleOrderDto = new OrderDTO { Id = orderId, CustomerName = "Test User" };
+            var sampleOrderDto = new OrderDTO { Id = orderId, CustomerUsername = "Test User" };
             var sampleMessage = JsonConvert.SerializeObject(sampleOrderDto);
 
             mockConsumer
@@ -57,12 +57,12 @@ namespace Order_status.Tests.API.Controllers
             mockOrderStatusService.Verify(
                 service => service.SetOrderStatusAsAcceptedAsync(It.Is<OrderDTO>(dto =>
                     dto.Id == orderId &&
-                    dto.CustomerName == "Test User"
+                    dto.CustomerUsername == "Test User"
                 )),
                 Times.Once
             );
 
-            mockConsumer.Verify(consumer => consumer.Subscribe("topic"), Times.Once);
+            mockConsumer.Verify(consumer => consumer.Subscribe("order.accepted"), Times.Once);
             mockConsumer.Verify(consumer => consumer.Consume(It.IsAny<TimeSpan>()), Times.AtLeastOnce);
         }
 

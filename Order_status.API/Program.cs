@@ -1,6 +1,5 @@
 using Order_status.API.Kafka;
 using Order_status.API.Services;
-using Order_status.Infrastructure.Kafka;
 using Order_status.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +12,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IOrderStatusService, OrderStatusService>();
-// Add the producer service as singletons:
-builder.Services.AddSingleton<KafkaProducer>();
 // Add the kafka consumer service as a hosted service (background service that runs for the lifetime of the application):
 builder.Services.AddHostedService<KafkaConsumer>();
 

@@ -26,14 +26,14 @@ namespace Order_status.Tests.API.Controllers
             var orderStatus = new OrderStatus
             {
                 OrderId = orderId,
-                CustomerName = "Test User",
+                CustomerUsername = "Test User",
                 Status = Status.Accepted
             };
 
             var orderStatusDTO = new OrderStatusDTO
             {
                 OrderId = orderId,
-                CustomerName = "Test User",
+                CustomerUsername = "Test User",
                 Status = Status.Accepted
             };
 

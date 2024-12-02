@@ -4,6 +4,6 @@
     public class OrderDTO
     {
         public Guid Id { get; set; }
-        public required string CustomerName { get; set; }
+        public required string CustomerUsername { get; set; }
     }
 }
