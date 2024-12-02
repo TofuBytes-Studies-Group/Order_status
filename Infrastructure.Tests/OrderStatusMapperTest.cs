@@ -15,7 +15,7 @@ namespace Infrastructure.Tests
             {
                 Id = "1",
                 OrderId = Guid.NewGuid(),
-                CustomerName = "Test User",
+                CustomerUsername = "Test User",
                 Status = Status.Accepted
             };
 
@@ -25,7 +25,7 @@ namespace Infrastructure.Tests
             // Assert
             Assert.NotNull(domain);
             Assert.Equal(dto.OrderId, domain.OrderId);
-            Assert.Equal(dto.CustomerName, domain.CustomerName);
+            Assert.Equal(dto.CustomerUsername, domain.CustomerUsername);
             Assert.Equal(dto.Status, domain.Status);
             Assert.NotEmpty(domain.StatusDescription);
             Assert.Equal("Your order has been accepted by the restaurant", domain.StatusDescription);
@@ -38,7 +38,7 @@ namespace Infrastructure.Tests
             var domain = new OrderStatus
             {
                 OrderId = Guid.NewGuid(),
-                CustomerName = "Test User",
+                CustomerUsername = "Test User",
                 Status = Status.Accepted
             };
 
@@ -49,7 +49,7 @@ namespace Infrastructure.Tests
             Assert.NotNull(dto);
             Assert.Null(dto.Id);
             Assert.Equal(domain.OrderId, dto.OrderId);
-            Assert.Equal(domain.CustomerName, dto.CustomerName);
+            Assert.Equal(domain.CustomerUsername, dto.CustomerUsername);
             Assert.Equal(domain.Status, dto.Status);
         }
     }

@@ -33,7 +33,7 @@ namespace Order_status.API.Kafka
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             // TODO: It will consume from the Order microservice and then use the order to create the order status
-            _consumer.Subscribe("topic");
+            _consumer.Subscribe("order.accepted");
 
             try
             {

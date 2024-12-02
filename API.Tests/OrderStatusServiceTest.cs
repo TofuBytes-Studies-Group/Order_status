@@ -24,7 +24,7 @@ namespace Order_status.Tests.API.Controllers
             var orderStatusDTO = new OrderStatusDTO
             {
                 OrderId = orderId,
-                CustomerName = "Test User",
+                CustomerUsername = "Test User",
                 Status = Status.Accepted
             };
 
@@ -41,7 +41,7 @@ namespace Order_status.Tests.API.Controllers
             Assert.NotNull(result);
             Assert.IsType<OrderStatus>(result);
             Assert.Equal(orderStatusDTO.OrderId, result.OrderId);
-            Assert.Equal(orderStatusDTO.CustomerName, result.CustomerName);
+            Assert.Equal(orderStatusDTO.CustomerUsername, result.CustomerUsername);
             Assert.Equal(orderStatusDTO.Status, result.Status);
         }
 
@@ -75,7 +75,7 @@ namespace Order_status.Tests.API.Controllers
             var orderDto = new OrderDTO
             {
                 Id = Guid.NewGuid(),
-                CustomerName = "Test User"
+                CustomerUsername = "Test User"
             };
 
             mockRepo
@@ -89,7 +89,7 @@ namespace Order_status.Tests.API.Controllers
             mockRepo.Verify(repo =>
                 repo.CreateOrderStatusAsync(It.Is<OrderStatusDTO>(dto =>
                     dto.OrderId == orderDto.Id &&
-                    dto.CustomerName == orderDto.CustomerName &&
+                    dto.CustomerUsername == orderDto.CustomerUsername &&
                     dto.Status == Status.Accepted
                 )), Times.Once);
         }
@@ -104,7 +104,7 @@ namespace Order_status.Tests.API.Controllers
             var orderDto = new OrderDTO
             {
                 Id = Guid.Empty, // Invalid ID
-                CustomerName = "Test User"
+                CustomerUsername = "Test User"
             };
 
             // Act & Assert
@@ -115,7 +115,7 @@ namespace Order_status.Tests.API.Controllers
         }
 
         [Fact]
-        public async Task SetOrderStatusAsAcceptedAsync_CustomerNameIsNullOrEmpty_ShouldThrowArgumentException()
+        public async Task SetOrderStatusAsAcceptedAsync_CustomerUsernameIsNullOrEmpty_ShouldThrowArgumentException()
         {
             // Arrange
             var mockRepo = new Mock<IOrderStatusRepository>();
@@ -124,7 +124,7 @@ namespace Order_status.Tests.API.Controllers
             var orderDto = new OrderDTO
             {
                 Id = Guid.NewGuid(),
-                CustomerName = string.Empty // Invalid CustomerName
+                CustomerUsername = string.Empty // Invalid CustomerName
             };
 
             // Act & Assert
@@ -135,7 +135,7 @@ namespace Order_status.Tests.API.Controllers
         }
 
         [Fact]
-        public async Task SetOrderStatusAsAcceptedAsync_CustomerNameIsNull_ShouldThrowArgumentException()
+        public async Task SetOrderStatusAsAcceptedAsync_CustomerUsernameIsNull_ShouldThrowArgumentException()
         {
             // Arrange
             var mockRepo = new Mock<IOrderStatusRepository>();
@@ -144,7 +144,7 @@ namespace Order_status.Tests.API.Controllers
             var orderDto = new OrderDTO
             {
                 Id = Guid.NewGuid(),
-                CustomerName = null // Invalid CustomerName
+                CustomerUsername = null // Invalid CustomerName
             };
 
             // Act & Assert

@@ -10,7 +10,7 @@ namespace Order_status.Infrastructure.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
         public required Guid OrderId { get; set; }
-        public required string CustomerName { get; set; }
+        public required string CustomerUsername { get; set; }
         public required Status Status { get; set; }
     }
 }

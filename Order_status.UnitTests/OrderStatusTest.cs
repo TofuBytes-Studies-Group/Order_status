@@ -16,7 +16,7 @@ namespace Order_status.UnitTests
             var orderStatus = new OrderStatus
             {
                 OrderId = Guid.NewGuid(),
-                CustomerName = "TestUser1",
+                CustomerUsername = "TestUser1",
                 Status = status
             };
 
@@ -34,7 +34,7 @@ namespace Order_status.UnitTests
             var orderStatus = new OrderStatus 
             {
                 OrderId = Guid.NewGuid(),
-                CustomerName = "TestUser1",
+                CustomerUsername = "TestUser1",
                 Status = (Status)999
             };
 
@@ -47,15 +47,15 @@ namespace Order_status.UnitTests
         public void ToString_ShouldReturnCorrectToString(Status status, string expectedDescription)
         {
             // Arrange
-            var username = "TestUser1";
+            var customerUsername = "TestUser1";
             var orderStatus = new OrderStatus
             {
                 OrderId = Guid.NewGuid(), 
-                CustomerName = username,
+                CustomerUsername = customerUsername,
                 Status = status
             };
 
-            var expectedToString = $"Hi {username}! {expectedDescription}.";
+            var expectedToString = $"Hi {customerUsername}! {expectedDescription}.";
 
             // Act
             var toString = orderStatus.ToString();

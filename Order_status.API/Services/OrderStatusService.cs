@@ -23,11 +23,11 @@ namespace Order_status.API.Services
 
         public async Task SetOrderStatusAsAcceptedAsync(OrderDTO orderDto)
         {
-            if (orderDto.Id == Guid.Empty || string.IsNullOrEmpty(orderDto.CustomerName))
+            if (orderDto.Id == Guid.Empty || string.IsNullOrEmpty(orderDto.CustomerUsername))
             {
                 throw new ArgumentException("The order must have a valid order id and customer name");
             }
-            OrderStatus orderStatus = new OrderStatus() { OrderId = orderDto.Id, CustomerName = orderDto.CustomerName, Status = Status.Accepted };
+            OrderStatus orderStatus = new OrderStatus() { OrderId = orderDto.Id, CustomerUsername = orderDto.CustomerUsername, Status = Status.Accepted };
             await _orderStatusRepository.CreateOrderStatusAsync(orderStatus.ToDTO());
         }
 

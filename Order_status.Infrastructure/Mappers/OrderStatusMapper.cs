@@ -10,7 +10,7 @@ namespace Order_status.Infrastructure.Mappers
             return new OrderStatus
             {
                 OrderId = dto.OrderId,
-                CustomerName = dto.CustomerName,
+                CustomerUsername = dto.CustomerUsername,
                 Status = dto.Status
             };
         }
@@ -20,7 +20,7 @@ namespace Order_status.Infrastructure.Mappers
             return new OrderStatusDTO
             {
                 OrderId = domain.OrderId,
-                CustomerName = domain.CustomerName,
+                CustomerUsername = domain.CustomerUsername,
                 Status = domain.Status
             };
         }
