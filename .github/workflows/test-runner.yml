@@ -12,8 +12,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-    
-
+           
 jobs:
   build:
     name: "Build & Test"
@@ -22,6 +21,16 @@ jobs:
     permissions: write-all
 
     runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:latest
+        options: --health-cmd='mongo --eval "db.adminCommand('ping')"' --health-interval=10s --health-timeout=5s --health-retries=5
+        ports:
+          - 27017:27017  
+        env:
+          MONGODB_USERNAME: root
+          MONGODB_PASSWORD: password
 
     steps:
       - name: Check out the code
