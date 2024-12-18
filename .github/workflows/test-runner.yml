@@ -30,6 +30,9 @@ jobs:
         env:
           MONGODB_USERNAME: root
           MONGODB_PASSWORD: password
+        options: > 
+          --health-cmd="mongo --username=root --password=password --eval 'db.adminCommand({ ping: 1 })'"
+          --health-interval=10s --health-timeout=5s --health-retries=5
 
     steps:
       - name: Check out the code
