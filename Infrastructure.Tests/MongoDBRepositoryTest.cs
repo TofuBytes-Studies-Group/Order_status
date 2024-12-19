@@ -52,7 +52,7 @@ namespace Infrastructure.Test
         }
 
         [Fact]
-        public async Task CreateOrderStatusAsync_InvalidOrderStatus_ShouldThrowException()
+        public async Task CreateOrderStatusAsync_DuplicateOrderStatus_ShouldThrowException()
         {
             // Arrange
             var orderId = Guid.NewGuid();
