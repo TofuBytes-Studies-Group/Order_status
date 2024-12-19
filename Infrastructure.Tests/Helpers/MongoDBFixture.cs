@@ -12,7 +12,8 @@ namespace Infrastructure.Tests.Helpers
 
         public MongoDBFixture()
         {
-            ConnectionString = ""; // TODO: Have to add manually so it doesn't leak our secret mongo connection string
+            var password = Environment.GetEnvironmentVariable("MONGODB_PASSWORD") ?? "password";
+            ConnectionString = $"mongodb://root:{password}@localhost:27017";
             DatabaseName = "test_db_for_mtogo_order_status_tests";
             CollectionName = "order_statuses";
 
